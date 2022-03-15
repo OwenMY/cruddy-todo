@@ -104,7 +104,7 @@ exports.readOne = (id, callback) => {
           } else {
             let realText = '' + text;
             callback(null, {id: id, text: realText});
-            return {id: id, text: realText};
+            // return {id: id, text: realText};
           }
         });
       }
@@ -115,13 +115,54 @@ exports.readOne = (id, callback) => {
 
 
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  // var item = items[id];
+  // if (!item) {
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   items[id] = text;
+  //   callback(null, { id, text });
+  // }
+
+  //fs.readdir(exports.dataDir, (err, files) =>
+  //if (err)
+  // throw err;
+  //else
+  // iterate files
+  // idVar = file
+  // if file is not found
+  // throw error
+  // otherwise
+  // fs.writeFile(exports.dataDir + '/' + idVar, inputText, (err) =>
+  // if (err)
+  // throw error
+  // otherwise
+  // callback(null, {id: id, text: inputText})
+
+  fs.readdir(exports.dataDir, (err, files) => {
+    if (err) {
+      throw ('Panda ate files');
+    } else {
+      let idVar;
+      for (let file of files) {
+        if (file.includes(id)) {
+          idVar = file;
+        }
+      }
+      if (!idVar) {
+        callback(new Error(`No item with id: ${id}`));
+      } else {
+        fs.writeFile(exports.dataDir + '/' + idVar, text, (err) => {
+          if (err) {
+            throw ('Panda blocks you');
+          } else {
+            callback(null, {id: id, text: text});
+            // return {id: id, text: text};
+          }
+        });
+      }
+    }
+  });
+
 };
 
 exports.delete = (id, callback) => {
