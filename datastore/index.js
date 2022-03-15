@@ -166,14 +166,58 @@ exports.update = (id, text, callback) => {
 };
 
 exports.delete = (id, callback) => {
-  var item = items[id];
-  delete items[id];
-  if (!item) {
-    // report an error if item not found
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback();
-  }
+  // var item = items[id];
+  // delete items[id];
+  // if (!item) {
+  //   // report an error if item not found
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   callback();
+  // }
+  //psuedocode
+
+  //fs.readdir(exports.dataDir, (err, files) => {
+  //if err
+  //throw err
+  //otherwise
+  //create idVar
+  //iterate files
+  //if file is equal to input id
+  //make idVar equal current file
+  //break here
+  //if idVar is undefined
+  //throw a party
+  //otherwise
+  //fs.rm(exports.dataDir + '/' + idVar, (err) =>
+  //if err
+  //throw err
+  //otheriwse
+  //invoke callback
+
+  fs.readdir(exports.dataDir, (err, files) => {
+    if (err) {
+      throw ('throw panda');
+    } else {
+      let idVar;
+      for (let file of files) {
+        if (file.includes(id)) {
+          idVar = file;
+          break;
+        }
+      }
+      if (!idVar) {
+        callback(new Error(`No item with id: ${id}`));
+      } else {
+        fs.rm(exports.dataDir + '/' + idVar, (err) => {
+          if (err) {
+            callback(new Error(`No item with id: ${id}`));
+          } else {
+            callback(null);
+          }
+        });
+      }
+    }
+  });
 };
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
