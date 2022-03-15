@@ -8,22 +8,18 @@ var items = {};
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  let helper = (err, id) => id;
-  var id = counter.getNextUniqueId(helper);
-  // console.log(id);
-  // console.log(text);
-  items[id] = text;
-  // callback(null, JSON.stringify({ id, texts }));
-  //use fs write file;
-  // template literal for file name (path) === id
-  // content is text
-  console.log(exports.dataDir);
-  fs.writeFile(exports.dataDir + `/${id}.txt`, text, (err) => {
-    if (err) {
-      throw ('error writing counter');
-    } else {
-      callback(null, JSON.stringify({ id, text }));
-    }
+  counter.getNextUniqueId((err, id) => {
+    items[id] = text;
+    //we do not need to worry about err, as that will be accounted for in counter.js
+    //we will recieve null if the getNextUniqueId is successfull.
+    fs.writeFile(exports.dataDir + `/${id}.txt`, text, (err) => {
+      if (err) {
+        throw ('Failed to write todo list item to file');
+      } else {
+        //in test.js, two tests wanted us to send in an object with two properties, and id and text.
+        callback(null, {id: id, text: text});
+      }
+    });
   });
 };
 
@@ -67,6 +63,8 @@ exports.delete = (id, callback) => {
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
 
 exports.dataDir = path.join(__dirname, 'data');
+
+// exports.id = index;
 
 exports.initialize = () => {
   if (!fs.existsSync(exports.dataDir)) {
