@@ -70,13 +70,49 @@ exports.readAll = (callback) => {
 };
 
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
+  // var text = items[id];
+  // if (!text) {
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   callback(null, { id, text });
+  // }
+
+  // fs.readdir (exports.dataDir, (err, files) => {
+  // err
+  // iterate files (current file includes id)
+  // let idVar = current file
+  // fs.readfile(exports.data + 'idVar', (err, text) =>
+  // err
+  // callback (null, text))
+  fs.readdir(exports.dataDir, (err, files) => {
+    if (err) {
+      throw ('party');
+    } else {
+      let idVar;
+      for (let file of files) {
+        if (file.includes(id)) {
+          idVar = file;
+          break;
+        }
+      }
+      if (!idVar) {
+        callback(new Error(`No item with id: ${id}`));
+      } else {
+        fs.readFile(exports.dataDir + '/' + idVar, (err, text) => {
+          if (err) {
+            callback(new Error(`No item with id: ${id}`));
+          } else {
+            let realText = '' + text;
+            callback(null, {id: id, text: realText});
+            return {id: id, text: realText};
+          }
+        });
+      }
+    }
+  });
 };
+
+
 
 exports.update = (id, text, callback) => {
   var item = items[id];
