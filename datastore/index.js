@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('underscore');
 const counter = require('./counter');
+const Promise = require('bluebird');
+Promise.promisifyAll(fs);
 
 var items = {};
 
@@ -47,17 +49,45 @@ exports.readAll = (callback) => {
   //console.log(files)
   //use callback
 
+  //Promise.all(files)
+  //.then( () => {
+  //   'something'
+  // })
+  //.catch( () => {
+  //   'something else'
+  // })
+
   fs.readdir(exports.dataDir, (err, files) => {
     if (err) {
       throw ('Failed to fetch files');
     } else {
-      // console.log(files);
-      // {files.id: id, files.text: id}
-      //create a new array using map
-      //the helper function will take each element (todo) and return each
-      //element as an object with Ryans format.
+      console.log(files, 'this is line 54');
 
-      //insert this new array into the callback
+      // fs.readFile(exports.dataDir + '/' + idVar, (err, text) => {
+      //   if (err) {
+      //     callback(new Error(`No item with id: ${id}`));
+      //   } else {
+      //     let realText = '' + text;
+      //     callback(null, {id: id, text: realText});
+      //     // return {id: id, text: realText};
+      //   }
+      // });
+
+      //map files and apply the fs.read to every element
+
+
+
+      //we need to get the text from every file.
+      //how do we get the text from every file.
+
+      //I - files, an array strings
+      //O - an array of objects
+      //C - none
+      //E - empty array...
+      //p1 = reading all the files
+
+      // Promise.all([p1, p2])
+      //   .then(())
       let listItems = files.map((element) => {
         let dotIndex = element.indexOf('.');
         let fileNum = element.slice(0, dotIndex);
